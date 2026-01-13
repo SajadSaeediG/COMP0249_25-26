@@ -4,7 +4,7 @@ This repo contains the code for the lab exercises and courseworks for COMP0222/0
 
 The code has been tested on MATLAB R2024b onwards on Windows, Linux and Mac (both Intel and M1) platforms.
 
-To install the code, you should clone this repo. Start MATLAB and change the download directory and run:
+To install the code, you should clone this repo:
 ```
 git clone https://github.com/UCL/COMP0222-0249_25-26.git
 cd COMP0222-0249_25-26
