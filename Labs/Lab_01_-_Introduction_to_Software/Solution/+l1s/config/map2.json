@@ -1,0 +1,42 @@
+  {
+      "sensors": [
+	{
+	    "gps": {
+		"enabled": true,
+		"sigmaR": 1,
+		"measurementPeriod": 1,
+		"occluders": [
+		    {
+			"x_min": -5,
+			"x_max": 5,
+			"y_min": -5,
+			"y_max": 5
+		    },
+		    {
+			"x_min": 7,
+			"x_max": 10,
+			"y_min": 7,
+			"y_max": 12
+		    }
+		]
+
+	    },
+	    "bearing": {
+		"enabled": true,
+		"sigmaR": 1,
+		"measurementPeriod": 0.5,
+		"sensors": [
+		{
+		    "position": [
+			-40,
+			0
+		    ],
+		    "orientation": 0,
+		    "detectionRange": 100,
+		    "detectionAngle": 360
+		}		]
+	    }
+	}
+      ]
+  }
+
