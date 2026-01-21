@@ -1,0 +1,29 @@
+{
+  "alpha": 0.003,
+  "beta": 0.002,
+  "sigmaQ": 0.15,
+  "maximumStepNumber": 4000,
+  "perturbWithNoise": true,
+  "x0": [
+    0, 1, 0, 2
+  ],
+  "P0": [
+    [
+      1, 0, 0, 0
+    ],
+    [
+      0, 1, 0, 0
+    ],
+    [
+      0, 0, 1, 01
+    ],
+    [
+      0, 0, 0, 1
+    ]
+  ],
+  "minDT": 0.001,
+  "maxDT": null,
+    "scenario": "config/map.json",
+    "heartbeatPeriod": 0.1,
+  "debugMode": false
+}

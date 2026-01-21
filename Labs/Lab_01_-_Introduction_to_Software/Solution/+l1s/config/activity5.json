@@ -1,0 +1,29 @@
+{
+  "alpha": 0.1,
+  "beta": 0.05,
+  "sigmaQ": 0.1,
+  "maximumStepNumber": 10000,
+  "perturbWithNoise": true,
+  "x0": [
+    0, 1, 0, 2
+  ],
+  "P0": [
+    [
+      1, 0, 0, 0
+    ],
+    [
+      0, 1, 0, 0
+    ],
+    [
+      0, 0, 1, 0
+    ],
+    [
+      0, 0, 0, 1
+    ]
+  ],
+  "minDT": 0.001,
+  "maxDT": null,
+  "scenario": "config/gps_two_occluders.json",
+    "heartbeatPeriod": 0.5,
+  "debugMode": false
+}

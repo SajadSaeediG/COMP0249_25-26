@@ -1,0 +1,12 @@
+{
+    "sensors": [
+	{
+	    "gps": {
+				"enabled": true,
+
+		"sigmaR": 1,
+		    "measurementPeriod": 1
+	    }
+	}
+    ]
+}

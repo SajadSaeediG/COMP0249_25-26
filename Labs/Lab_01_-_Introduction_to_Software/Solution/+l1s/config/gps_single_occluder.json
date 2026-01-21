@@ -1,0 +1,21 @@
+{
+    "sensors": [
+	{
+	    "gps": {
+				"enabled": true,
+
+		"sigmaR": 1,
+				  "measurementPeriod": 1,
+				  		"occluders": [
+		    {
+			"x_min": -3,
+			"x_max": 6,
+			"y_min": -5,
+			"y_max": 1
+		    }
+							       ]
+
+	    }
+	}
+    ]
+}
