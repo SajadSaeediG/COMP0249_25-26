@@ -1,0 +1,25 @@
+{
+    "platform": "config/q3_a/trianglebot_platform.json",
+    "platformTrajectory": "config/q3_a/waypoints.json",
+  "maximumStepNumber": 2000,
+  "perturbWithNoise": true,
+  "x0": [
+    0, -0.5, 0
+  ],
+  "P0": [
+    [
+      0, 0, 0
+    ],
+    [
+      0, 0, 0
+    ],
+    [
+      0, 0, 0
+    ]
+  ],
+    "minDT": 0.001,
+  "maxDT": null,
+    "debugMode": false,
+    "scenario": "config/q3_a/scenario.json",
+    "heartbeatPeriod": 0.1
+}
