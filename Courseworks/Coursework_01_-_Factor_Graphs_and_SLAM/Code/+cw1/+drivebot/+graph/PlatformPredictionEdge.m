@@ -59,11 +59,21 @@ classdef PlatformPredictionEdge < g2o.core.BaseBinaryEdge
             %   Compute the initial estimate of the platform x_(k+1) given
             %   an estimate of the platform at time x_(k) and the control
             %   input u_(k+1)
-
-            warning('PlatformPredictionEdge.initialEstimate: implement')
-
-            % Compute the posterior assming no noise
-            obj.edgeVertices{2}.x = zeros(3, 1);
+            
+            priorX = obj.edgeVertices{1}.estimate();
+            u = obj.z;
+            
+            % Rotation matrix scaled by timestep
+            c = cos(priorX(3));
+            s = sin(priorX(3));
+            M = obj.dT * [c -s 0;
+                s  c 0;
+                0  0 1];
+            
+            % Predict forward assuming no noise
+            predictedX = priorX + M * u;
+            predictedX(3) = g2o.stuff.normalize_theta(predictedX(3));
+            obj.edgeVertices{2}.setEstimate(predictedX);
         end
         
         function computeError(obj)
@@ -78,10 +88,26 @@ classdef PlatformPredictionEdge < g2o.core.BaseBinaryEdge
             %   vertex. Note the error enters in a nonlinear manner, so the
             %   equation has to be rearranged to make the error the subject
             %   of the formulat
-                       
-            warning('PlatformPredictionEdge.computeError: implement')
-
-            obj.errorZ = 0;
+            
+            priorX = obj.edgeVertices{1}.x;
+            nextX = obj.edgeVertices{2}.x;
+            
+            c = cos(priorX(3));
+            s = sin(priorX(3));
+            
+            % Inverse of M (rotation scaled by dT)
+            Mi = (1 / obj.dT) * [c s 0;
+                -s c 0;
+                0 0 1];
+            
+            dx = nextX - priorX;
+            
+            % Compute the error
+            obj.errorZ = Mi * dx - obj.z;
+            
+            % Wrap the heading error (in angle space) then convert to rate
+            angleErr = g2o.stuff.normalize_theta(dx(3) - obj.dT * obj.z(3));
+            obj.errorZ(3) = angleErr / obj.dT;
         end
         
         % Compute the Jacobians
@@ -96,12 +122,27 @@ classdef PlatformPredictionEdge < g2o.core.BaseBinaryEdge
             %   vertices which contribute to the edge, the Jacobians with
             %   respect to both of them must be computed.
             %
-
-            warning('PlatformPredictionEdge.linearizeOplus: implement')
-
-            obj.J{1} = -eye(3);
-
-            obj.J{2} = eye(3);
+            
+            priorX = obj.edgeVertices{1}.x;
+            nextX = obj.edgeVertices{2}.x;
+            
+            c = cos(priorX(3));
+            s = sin(priorX(3));
+            dx = nextX - priorX;
+            
+            Mi = (1 / obj.dT) * [c s 0;
+                -s c 0;
+                0 0 1];
+            
+            obj.J{2} = Mi;
+            
+            obj.J{1}(1, 1) = -c / obj.dT;
+            obj.J{1}(1, 2) = -s / obj.dT;
+            obj.J{1}(1, 3) = (-dx(1) * s + dx(2) * c) / obj.dT;
+            obj.J{1}(2, 1) = s / obj.dT;
+            obj.J{1}(2, 2) = -c / obj.dT;
+            obj.J{1}(2, 3) = (-dx(1) * c - dx(2) * s) / obj.dT;
+            obj.J{1}(3, 3) = -1 / obj.dT;
         end
     end    
 end
