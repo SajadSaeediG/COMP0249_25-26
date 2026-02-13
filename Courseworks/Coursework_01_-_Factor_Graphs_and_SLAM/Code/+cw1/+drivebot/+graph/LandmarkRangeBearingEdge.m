@@ -83,9 +83,9 @@ classdef LandmarkRangeBearingEdge < g2o.core.BaseBinaryEdge
             dXY = m(1:2) - x(1:2);
             r = norm(dXY);
             
-            % Predicted measurement minus actual measurement
-            obj.errorZ(1) = r - obj.z(1);
-            obj.errorZ(2) = g2o.stuff.normalize_theta(atan2(dXY(2), dXY(1)) - x(3) - obj.z(2));
+            % Actual measurement minus predicted measurement
+            obj.errorZ(1) = obj.z(1) - r;
+            obj.errorZ(2) = g2o.stuff.normalize_theta(obj.z(2) - (atan2(dXY(2), dXY(1)) - x(3)));
         end
         
         function linearizeOplus(obj)
@@ -106,11 +106,11 @@ classdef LandmarkRangeBearingEdge < g2o.core.BaseBinaryEdge
             r2 = sum(dXY.^2);
             r = sqrt(r2);
             
-            obj.J{1} = [-dXY(1)/r -dXY(2)/r 0;
-                dXY(2)/r2 -dXY(1)/r2 -1];
+            obj.J{1} = [dXY(1)/r dXY(2)/r 0;
+                -dXY(2)/r2 dXY(1)/r2 1];
             
-            obj.J{2} = [dXY(1)/r dXY(2)/r;
-                -dXY(2)/r2 dXY(1)/r2];
+            obj.J{2} = [-dXY(1)/r -dXY(2)/r;
+                dXY(2)/r2 -dXY(1)/r2];
         end        
     end
 end

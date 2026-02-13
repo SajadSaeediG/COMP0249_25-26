@@ -27,7 +27,7 @@ classdef PlatformPredictionEdge < g2o.core.BaseBinaryEdge
         % The length of the time step
         dT;
     end
-    
+
     methods(Access = public)
         function obj = PlatformPredictionEdge(dT)
             % PlatformPredictionEdge for PlatformPredictionEdge
@@ -62,11 +62,13 @@ classdef PlatformPredictionEdge < g2o.core.BaseBinaryEdge
             
             priorX = obj.edgeVertices{1}.estimate();
             u = obj.z;
+
+            dt = obj.dT;
             
             % Rotation matrix scaled by timestep
             c = cos(priorX(3));
             s = sin(priorX(3));
-            M = obj.dT * [c -s 0;
+            M = dt * [c -s 0;
                 s  c 0;
                 0  0 1];
             
@@ -94,9 +96,11 @@ classdef PlatformPredictionEdge < g2o.core.BaseBinaryEdge
             
             c = cos(priorX(3));
             s = sin(priorX(3));
+
+            dt = obj.dT;
             
-            % Inverse of M (rotation scaled by dT)
-            Mi = (1 / obj.dT) * [c s 0;
+            % Inverse of M (rotation scaled by dt)
+            Mi = (1 / dt) * [c s 0;
                 -s c 0;
                 0 0 1];
             
@@ -106,8 +110,8 @@ classdef PlatformPredictionEdge < g2o.core.BaseBinaryEdge
             obj.errorZ = Mi * dx - obj.z;
             
             % Wrap the heading error (in angle space) then convert to rate
-            angleErr = g2o.stuff.normalize_theta(dx(3) - obj.dT * obj.z(3));
-            obj.errorZ(3) = angleErr / obj.dT;
+            angleErr = g2o.stuff.normalize_theta(dx(3) - dt * obj.z(3));
+            obj.errorZ(3) = angleErr / dt;
         end
         
         % Compute the Jacobians
@@ -125,24 +129,26 @@ classdef PlatformPredictionEdge < g2o.core.BaseBinaryEdge
             
             priorX = obj.edgeVertices{1}.x;
             nextX = obj.edgeVertices{2}.x;
+
+            dt = obj.dT;
             
             c = cos(priorX(3));
             s = sin(priorX(3));
             dx = nextX - priorX;
             
-            Mi = (1 / obj.dT) * [c s 0;
+            Mi = (1 / dt) * [c s 0;
                 -s c 0;
                 0 0 1];
             
             obj.J{2} = Mi;
             
-            obj.J{1}(1, 1) = -c / obj.dT;
-            obj.J{1}(1, 2) = -s / obj.dT;
-            obj.J{1}(1, 3) = (-dx(1) * s + dx(2) * c) / obj.dT;
-            obj.J{1}(2, 1) = s / obj.dT;
-            obj.J{1}(2, 2) = -c / obj.dT;
-            obj.J{1}(2, 3) = (-dx(1) * c - dx(2) * s) / obj.dT;
-            obj.J{1}(3, 3) = -1 / obj.dT;
+            obj.J{1}(1, 1) = -c / dt;
+            obj.J{1}(1, 2) = -s / dt;
+            obj.J{1}(1, 3) = (-dx(1) * s + dx(2) * c) / dt;
+            obj.J{1}(2, 1) = s / dt;
+            obj.J{1}(2, 2) = -c / dt;
+            obj.J{1}(2, 3) = (-dx(1) * c - dx(2) * s) / dt;
+            obj.J{1}(3, 3) = -1 / dt;
         end
     end    
 end
